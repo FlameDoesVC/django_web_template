@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "shop.apps.ShopConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -125,8 +126,9 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    "shop/static",
+    # BASE_DIR / "static",
+    # "shop/static",
+    "shop/templates"
 ]
 
 # Default primary key field type
