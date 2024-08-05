@@ -16,14 +16,9 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
-
-from shop import views
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.index, name="index"),
-    path("landing", views.landing, name="landing"),
-    path("generic", views.generic, name="generic"),
-    path("elements", views.elements, name="elements"),
+    path("", include("shop.urls")),
 ]

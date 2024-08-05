@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "shop.apps.ShopConfig",
+    "shop_admin.apps.ShopAdminConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -128,10 +129,12 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     # BASE_DIR / "static",
     # "shop/static",
-    "shop/templates"
+    "shop/templates",
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = 'shop_admin.User'

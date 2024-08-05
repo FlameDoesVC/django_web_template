@@ -5,14 +5,8 @@ from django.shortcuts import render
 def index(request):
     return render(request, "index.html")
 
+def checkout(request):
+    return render(request, "checkout.html")
 
-def landing(request):
-    return render(request, "landing.html")
-
-
-def generic(request):
-    return render(request, "generic.html")
-
-
-def elements(request):
-    return render(request, "elements.html")
+def product_details(request):
+    return render(request, "product.html")
