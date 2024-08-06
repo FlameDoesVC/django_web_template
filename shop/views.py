@@ -10,3 +10,6 @@ def checkout(request):
 
 def product_details(request):
     return render(request, "product.html")
+
+def login_view(request):
+    return render(request, "login.html")
