@@ -194,40 +194,27 @@
                     <div id="product-tab">
                         <!-- product tab nav -->
                         <ul class="tab-nav">
-                            <li class="active"><a style="font-size: x-large;">Login</a>
+                            <li><a href="{% url 'login' %}" style="font-size: x-large;">Login</a>
                             </li>
-                            <li><a href="{% url 'signup' %}" style="font-size: x-large;">Signup</a>
+                            <li class="active"><a style="font-size: x-large;">Signup</a></li>
                         </ul>
                         <!-- /product tab nav -->
 
                         <!-- product tab content -->
                         <div class="tab-content">
-                            <!-- tab1  -->
-                            <div id="login" class="tab-pane fade in active">
+                            <!-- tab2  -->
+                            <div id="signup" class="tab-pane fade in active">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <form method="post">
+                                        <form method="POST">
                                             {% csrf_token %}
                                             {{ form|crispy }}
-                                            <!-- <div class="mb-3">
-                                                <label for="email" class="form-label">Email
-                                                    address</label>
-                                                <input type="email" class="form-control" name="email"
-                                                    placeholder="name@example.com">
-                                            </div>
-                                            <br>
-                                            <div class="mb-3">
-                                                <label for="password" class="form-label">Password</label>
-                                                <input type="password" class="form-control" name="password"
-                                                    placeholder="fatcowraaifiscrazy">
-                                            </div>
-                                            <br> -->
-                                            <button class="btn btn-block btn-danger search-btn" type="submit">Login</button>
+                                            <button class="btn btn-block btn-danger search-btn" type="submit">Signup</button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <!-- /tab1  -->
+                            <!-- /tab2  -->
                         </div>
                         <!-- /product tab content  -->
                     </div>
