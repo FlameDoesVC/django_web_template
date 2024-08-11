@@ -7,15 +7,13 @@ from .models import Cart, Product
 def get_cart(request):
     try:
         cart = Cart.objects.get(user=request.user)
-    except:
-        cart = Cart(user=request.user)
-        cart.save()
+    except Exception:
+        cart = None
     return cart
 
 # Create your views here.
 def index(request):
-    cart = get_cart(request)
-    return render(request, "index.html", {'cart': cart})
+    return render(request, "index.html")
 
 @login_required
 def checkout(request):
@@ -26,7 +24,7 @@ def product_details(request, id):
     if (not product):
         return redirect('index')
     
-    return render(request, "product.html")
+    return render(request, "product.html", {"product": product})
 
 def add_to_cart(request):
     if request.method == 'POST':
