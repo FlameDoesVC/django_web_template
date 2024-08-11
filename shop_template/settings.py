@@ -38,11 +38,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'crispy_forms',
-    'crispy_bootstrap3',
+    "crispy_forms",
+    "crispy_bootstrap3",
 ]
 
-CRISPY_TEMPLATE_PACK = 'Bootstrap3'
+CRISPY_TEMPLATE_PACK = "Bootstrap3"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -70,6 +70,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "shop.context_processors.inject_categories",
             ],
         },
     },
@@ -133,6 +134,7 @@ STATICFILES_DIRS = [
     # BASE_DIR / "static",
     # "shop/static",
     "shop/templates",
+    "shop",
 ]
 
 # Default primary key field type
