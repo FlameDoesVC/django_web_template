@@ -9,7 +9,7 @@
       <div class="col-md-5 col-md-push-2">
         <div id="product-main-img">
           <div class="product-preview">
-            <img src="{% static './img/product01.png' %}" alt="" />
+            <img src="{% static '' %}{{product.image}}" alt="" />
           </div>
 
           <!-- <div class="product-preview">
@@ -31,7 +31,7 @@
       <div class="col-md-2 col-md-pull-5">
         <div id="product-imgs">
           <div class="product-preview">
-            <img src="{% static './img/product01.png' %}" alt="" />
+            <img src="{% static '' %}{{product.image}}" alt="" />
           </div>
 
           <!-- <div class="product-preview">
@@ -118,8 +118,7 @@
 
           <ul class="product-links">
             <li>Category:</li>
-            <li><a href="#">Headphones</a></li>
-            <li><a href="#">Accessories</a></li>
+            <li><a href="{% url 'products' %}?c={{product.category.name}}">{{product.category.name}}</a></li>
           </ul>
 
           <!-- <ul class="product-links">
@@ -134,7 +133,7 @@
       <!-- /Product details -->
 
       <!-- Product tab -->
-      <div class="col-md-12" style="margin-top: 60px">
+      {% comment %} <div class="col-md-12" style="margin-top: 60px">
         <div id="product-tab">
           <!-- product tab nav -->
           <ul class="tab-nav">
@@ -384,7 +383,7 @@
           </div>
           <!-- /product tab content  -->
         </div>
-      </div>
+      </div> {% endcomment %}
       <!-- /product tab -->
     </div>
     <!-- /row -->

@@ -133,8 +133,10 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     # BASE_DIR / "static",
     # "shop/static",
+    "shop/products",
     "shop/templates",
     "shop",
+	BASE_DIR
 ]
 
 # Default primary key field type

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row" style="display: flex; justify-content: center">
+			<div class="col-md-10 order-details">
+        <div class="section-title text-center">
+          <h3 class="title">Your Orders</h3>
+        </div>
+        <div class="cart-list">
+          {% if not orders %}
+          <p style="text-align: center">Seems lonely in here :(</p>
+          <a href="/products" class="primary-btn order-submit"
+            >Browse Products</a
+          >
+          {% else %} {% for order in orders %}
+          <div class="product-widget">
+              <div class="product-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h3 class="product-name">
+                      <a href="/order/{{order.slug}}">Order {{order.id}}</a>
+                    </h3>
+                    <h4 class="product-price">MVR {{order.total}}</h4>
+                  </div>
+                </div>
+          </div>
+          <hr />
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

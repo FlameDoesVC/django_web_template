@@ -1,187 +1,278 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static %} {% block content %}
+<script>
+  function updatePlaceOrder() {
+  	var terms = document.getElementById("terms");
+  	var placeOrder = document.getElementsByClassName("order-submit")[0];
+  	placeOrder.disabled = !terms.checked;
+  }
+  document.addEventListener("DOMContentLoaded", function() {
+  	updatePlaceOrder();
+  });
 
-{% load static %}
+  function unlinkShippingAddress() {
+  	document.getElementById("shipping_address_id").value = "";
+  }
+  {% comment %} document.getElementsByClassName("order-submit")[0].addEventListener("click", function() {
+  	if (document.getElementsByClassName("order-submit")[0].classList.contains("disabled")) {
+  		return;
+  	}
 
-{% block content %}
+
+
+  	var paymentMethod = document.querySelector('input[name="payment_method"]:checked').id;
+  	var orderNotes = document.getElementsByClassName("notes")[0].getElementsByTagName("textarea")[0].value;
+  	var firstName = document.getElementsByName("first_name")[0].value;
+  	var lastName = document.getElementsByName("last_name")[0].value;
+  	var address = document.getElementsByName("address")[0].value;
+  	var city = document.getElementsByName("city")[0].value;
+  	var country = document.getElementsByName("country")[0].value;
+  	var zipCode = document.getElementsByName("zip_code")[0].value;
+  	var tel = document.getElementsByName("tel")[0].value;
+  	var data = {
+  		"payment_method": paymentMethod,
+  		"order_notes": orderNotes,
+  		"first_name": firstName,
+  		"last_name": lastName,
+  		"address": address,
+  		"city": city,
+  		"country": country,
+  		"zip_code": zipCode,
+  		"tel": tel
+  	};
+  	var xhr = new XMLHttpRequest();
+  	xhr.open("POST", "/checkout/", true);
+  	xhr.setRequestHeader('Content-Type', 'application/json');
+  	xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+  	xhr.onreadystatechange = function() {
+  		if (xhr.readyState == 4 && xhr.status == 200) {
+  			var response = JSON.parse(xhr.responseText);
+  			if (response.success) {
+  				window.location.href = "/order/" + response.order_id + "/";
+  			} else {
+  				alert(response.message);
+  			}
+  		}
+  	};
+  	xhr.send(JSON.stringify(data));
+  }); {% endcomment %}
+</script>
+
 <!-- SECTION -->
 <div class="section">
-	<!-- container -->
-	<div class="container">
-		<!-- row -->
-		<div class="row">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <form method="post">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-7">
+          <!-- Shipping Details -->
+          <div class="shipping-details">
+            <div class="section-title">
+              <h3 class="title">Shipping address</h3>
+            </div>
+            <input
+              type="hidden"
+              name="shipping_address_id"
+              id="shipping_address_id"
+              value="{{shipping_address.id}}"
+            />
+            <div class="form-group">
+              <input
+                class="input"
+                type="text"
+                name="first_name"
+                placeholder="First Name"
+                value="{{shipping_address.first_name}}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="input"
+                type="text"
+                name="last_name"
+                placeholder="Last Name"
+                value="{{shipping_address.last_name}}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="input"
+                type="text"
+                name="address"
+                placeholder="Address"
+                value="{{shipping_address.address}}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="input"
+                type="text"
+                name="city"
+                placeholder="City"
+                value="{{shipping_address.city}}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="input"
+                type="text"
+                name="country"
+                placeholder="Country"
+                value="{{shipping_address.country}}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="input"
+                type="text"
+                name="zip_code"
+                placeholder="ZIP Code"
+                value="{{shipping_address.zip_code}}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="input"
+                type="tel"
+                name="tel"
+                placeholder="Telephone"
+                value="{{shipping_address.telephone}}"
+                required
+              />
+            </div>
+          </div>
+          <!-- /Shipping Details -->
 
-			<div class="col-md-7">
-				<!-- Billing Details -->
-				<div class="billing-details">
-					<div class="section-title">
-						<h3 class="title">Billing address</h3>
-					</div>
-					<div class="form-group">
-						<input class="input" type="text" name="first-name" placeholder="First Name">
-					</div>
-					<div class="form-group">
-						<input class="input" type="text" name="last-name" placeholder="Last Name">
-					</div>
-					<div class="form-group">
-						<input class="input" type="email" name="email" placeholder="Email">
-					</div>
-					<div class="form-group">
-						<input class="input" type="text" name="address" placeholder="Address">
-					</div>
-					<div class="form-group">
-						<input class="input" type="text" name="city" placeholder="City">
-					</div>
-					<div class="form-group">
-						<input class="input" type="text" name="country" placeholder="Country">
-					</div>
-					<div class="form-group">
-						<input class="input" type="text" name="zip-code" placeholder="ZIP Code">
-					</div>
-					<div class="form-group">
-						<input class="input" type="tel" name="tel" placeholder="Telephone">
-					</div>
-					<div class="form-group">
-						<div class="input-checkbox">
-							<input type="checkbox" id="create-account">
-							<label for="create-account">
-								<span></span>
-								Create Account?
-							</label>
-							<div class="caption">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
-								<input class="input" type="password" name="password" placeholder="Enter Your Password">
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Billing Details -->
+          <!-- Order notes -->
+          <div class="order-notes">
+            <textarea
+              class="input"
+              placeholder="Order Notes"
+              name="notes"
+            ></textarea>
+          </div>
+          <!-- /Order notes -->
+        </div>
 
-				<!-- Shipping Details -->
-				<div class="shipping-details">
-					<div class="section-title">
-						<h3 class="title">Shipping address</h3>
-					</div>
-					<div class="input-checkbox">
-						<input type="checkbox" id="shipping-address">
-						<label for="shiping-address">
-							<span></span>
-							Ship to a different address?
-						</label>
-						<div class="caption">
-							<div class="form-group">
-								<input class="input" type="text" name="first-name" placeholder="First Name">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="last-name" placeholder="Last Name">
-							</div>
-							<div class="form-group">
-								<input class="input" type="email" name="email" placeholder="Email">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="address" placeholder="Address">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="city" placeholder="City">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="country" placeholder="Country">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="zip-code" placeholder="ZIP Code">
-							</div>
-							<div class="form-group">
-								<input class="input" type="tel" name="tel" placeholder="Telephone">
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Shipping Details -->
-
-				<!-- Order notes -->
-				<div class="order-notes">
-					<textarea class="input" placeholder="Order Notes"></textarea>
-				</div>
-				<!-- /Order notes -->
-			</div>
-
-			<!-- Order Details -->
-			<div class="col-md-5 order-details">
-				<div class="section-title text-center">
-					<h3 class="title">Your Order</h3>
-				</div>
-				<div class="order-summary">
-					<div class="order-col">
-						<div><strong>PRODUCT</strong></div>
-						<div><strong>TOTAL</strong></div>
-					</div>
-					<div class="order-products">
-						<div class="order-col">
-							<div>1x Product Name Goes Here</div>
-							<div>MVR 980.00</div>
-						</div>
-						<div class="order-col">
-							<div>2x Product Name Goes Here</div>
-							<div>MVR 980.00</div>
-						</div>
-					</div>
-					<div class="order-col">
-						<div>Shipping</div>
-						<div><strong>FREE</strong></div>
-					</div>
-					<div class="order-col">
-						<div><strong>TOTAL</strong></div>
-						<div><strong class="order-total">MVR 2940.00</strong></div>
-					</div>
-				</div>
-				<div class="payment-method">
-					<div class="input-radio">
-						<input type="radio" name="payment" id="payment-1">
-						<label for="payment-1">
-							<span></span>
-							Direct Bank Transfer
-						</label>
-						<div class="caption">
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-								dolore magna aliqua.</p>
-						</div>
-					</div>
-					<div class="input-radio">
-						<input type="radio" name="payment" id="payment-2">
-						<label for="payment-2">
-							<span></span>
-							Cheque Payment
-						</label>
-						<div class="caption">
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-								dolore magna aliqua.</p>
-						</div>
-					</div>
-					<div class="input-radio">
-						<input type="radio" name="payment" id="payment-3">
-						<label for="payment-3">
-							<span></span>
-							Paypal System
-						</label>
-						<div class="caption">
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-								dolore magna aliqua.</p>
-						</div>
-					</div>
-				</div>
-				<div class="input-checkbox">
-					<input type="checkbox" id="terms">
-					<label for="terms">
-						<span></span>
-						I've read and accept the <a href="#">terms & conditions</a>
-					</label>
-				</div>
-				<a href="#" class="primary-btn order-submit">Place order</a>
-			</div>
-			<!-- /Order Details -->
-		</div>
-		<!-- /row -->
-	</div>
-	<!-- /container -->
+        <!-- Order Details -->
+        <div class="col-md-5 order-details">
+          <div class="section-title text-center">
+            <h3 class="title">Your Order</h3>
+          </div>
+          <div class="order-summary">
+            <div class="order-col">
+              <div><strong>PRODUCT</strong></div>
+              <div><strong>TOTAL</strong></div>
+            </div>
+            <div class="order-products">
+              {% for item in items %}
+              <div class="order-col">
+                <div>
+                  <strong>{{item.quantity}}</strong>x [{{item.size}}]
+                  [{{item.color}}] {{item.product.title}}
+                </div>
+                <div>
+                  MVR {{item.product.price|mult:item.quantity|floatformat:2}}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <hr />
+            <div class="order-col">
+              <div>Shipping</div>
+              <div><strong>FREE</strong></div>
+            </div>
+            <div class="order-col">
+              <div><strong>TOTAL</strong></div>
+              <div>
+                <strong class="order-total">MVR {{total|floatformat:2}}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="payment-method">
+            <div class="input-radio">
+              <input
+                type="radio"
+                name="payment"
+                id="payment-1"
+                value="transfer"
+                required
+              />
+              <label for="payment-1">
+                <span></span>
+                Bank Transfer
+              </label>
+              <div class="caption">
+                <p>
+                  Bank account number: 7770000010101<br />Viber Number: 9999990
+                </p>
+              </div>
+            </div>
+            <div class="input-radio">
+              <input type="radio" name="payment" id="payment-2" value="card" />
+              <label for="payment-2">
+                <span></span>
+                BML Payment Gateway
+              </label>
+              <div class="caption">
+                <p>
+                  Using this incurs an additional charge to compensate for the
+                  3% cut that BML takes for using their payment gateway.
+                </p>
+              </div>
+            </div>
+            <div class="input-radio">
+              <input type="radio" name="payment" id="payment-3" value="card" />
+              <label for="payment-3">
+                <span></span>
+                Cash on Delivery
+              </label>
+              <div class="caption">
+                <p>
+                  Pay with cash upon delivery. Please have exact change ready.
+                </p>
+              </div>
+            </div>
+            {% comment %}
+            <div class="input-radio">
+              <input type="radio" name="payment" id="payment-3" />
+              <label for="payment-3">
+                <span></span>
+                Paypal System
+              </label>
+              <div class="caption">
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+              </div>
+            </div>
+            {% endcomment %}
+          </div>
+          <div class="input-checkbox">
+            <input type="checkbox" id="terms" onchange="updatePlaceOrder()" />
+            <label for="terms">
+              <span></span>
+              I've read and accept the <a href="#">terms & conditions</a>
+            </label>
+          </div>
+          <button type="submit" class="primary-btn order-submit" disabled>
+            Place order
+          </button>
+        </div>
+        <!-- /Order Details -->
+      </div>
+    </form>
+    <!-- /row -->
+  </div>
+  <!-- /container -->
 </div>
 <!-- /SECTION -->
 {% endblock %}

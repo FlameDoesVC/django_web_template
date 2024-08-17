@@ -1,4 +1,89 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
+<script>
+  function debounce(func) {
+    var timer;
+    return function (...args) {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(func, 1000, ...args);
+    };
+  }
+
+  function updateCartUI() {
+    const items = document.querySelectorAll(".product-widget");
+    let total = 0;
+    items.forEach((item) => {
+      const price = parseFloat(
+        item.querySelector(".product-price").innerText.split(" ")[1]
+      );
+      const qty = parseInt(item.querySelector("input[name=quantity]").value);
+      total += price * qty;
+    });
+    document.querySelector(".order-total").innerText = `MVR ${total.toFixed(
+      2
+    )}`;
+  }
+
+  function submitForm(id) {
+    const form = document.querySelector(`#form-item-${id}`);
+    form.submit();
+  }
+
+  {% comment %} function updateCart() {
+    const items = document.querySelectorAll(".product-widget");
+    const data = [];
+    items.forEach((item) => {
+      const id = item.querySelector("input[name=cart_item_id]")?.value;
+      const qty = item.querySelector("input[name=quantity]")?.value;
+      const size = item.querySelector("select[name=size]")?.value;
+      const color = item.querySelector("select[name=color]")?.value;
+      data.push({ id, qty, size, color });
+    });
+
+    fetch("/update-cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.querySelector(
+          'input[name="csrfmiddlewaretoken"]'
+        ).value,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          updateCartUI();
+        }
+      });
+  } {% endcomment %}
+
+  {% comment %} function submitFormAfterDebounce(e) {
+    debounce(updateCart);
+  }
+
+  function deleteItem(e) {
+    const item = e.target.closest(".product-widget");
+    item.remove();
+    updateCart();
+  } {% endcomment %}
+
+  window.onload = function () {
+    // prevent enter key on quantity input elements 
+    document.querySelectorAll(".cart-input").forEach((input) => {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          submitForm(input.closest("form").id.split("-")[2]);
+        }
+      });
+    });
+    updateCartUI();
+  };
+
+</script>
+
+{% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}" /> {% endcomment %}
+
 <!-- SECTION -->
 <div class="section">
   <!-- container -->
@@ -6,7 +91,7 @@
     <!-- row -->
     <div class="row" style="display: flex; justify-content: center">
       <!-- Order Details -->
-      <div class="col-md-5 order-details">
+      <div class="col-md-10 order-details">
         <div class="section-title text-center">
           <h3 class="title">Your Cart</h3>
         </div>
@@ -18,17 +103,152 @@
           >
           {% else %} {% for item in items %}
           <div class="product-widget">
-            <div class="product-img">
-              <img src="{% static '' %}{{item.product.image}}" alt="" />
-            </div>
-            <div class="product-body">
-              <h3 class="product-name">
-                <a href="#">{{item.product.title}}</a>
-              </h3>
-              <h4 class="product-price"><span class="qty">{{item.quantity}}</span>MVR {{item.product.price}}</h4>
-            </div>
-            <button class="delete"><i class="fa fa-close"></i></button>
+            <form id="form-item-{{item.id}}" action="{% url "update-cart-item" item.id %}" method="post">
+              <input type="hidden" name="cart_item_id" value="{{item.id}}" />
+              <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}" />
+              <div class="product-img">
+                <img src="{% static '' %}{{item.product.image}}" alt="" />
+              </div>
+              <div class="product-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h3 class="product-name">
+                      <a href="{% url 'product' item.product.id %}">{{item.product.title}}</a>
+                    </h3>
+                    <h4 class="product-price">MVR {{item.product.price}}</h4>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="display: flex; justify-content: space-between;">
+                      <span
+                        class="btn cart-input-addon"
+                        id="quantity-label"
+                        style="margin-right: 0.25em"
+                        type="button"
+                        >Quantity</span
+                      >
+                      <div class="input-group">
+                        <span class="input-group-btn">
+                          <button
+                            class="btn btn-default cart-input-btn"
+                            type="submit"
+                            formaction="{% url "update-cart-item" item.id %}?action=decrement"
+                          >
+                            -
+                          </button>
+                        </span>
+                        <input
+                          type="number"
+                          name="quantity"
+                          class="form-control cart-input"
+                          placeholder="1"
+                          value="{{item.quantity}}"
+                          onchange="submitForm('{{item.id}}')"
+                          aria-describedby="quantity-label"
+                        />
+
+                        <span class="input-group-btn">
+                          <button
+                            class="btn btn-default cart-input-btn"
+                            type="submit"
+                            formaction="{% url "update-cart-item" item.id %}?action=increment"
+                          >
+                            +
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="input-group" style="width: 100%">
+                      <span
+                        class="input-group-addon cart-input-addon"
+                        id="size-label"
+                        >Size</span
+                      >
+                      <select
+                        class="form-control cart-input input-select"
+                        name="size"
+                        onchange="submitForm('{{item.id}}')"
+                      >
+                        {% for size in item.product.size|split:";" %}
+                        {% if size == item.size %}
+                        <option value="{{ size }}" selected>{{ size }}</option>
+                        {% else %}
+                        <option value="{{ size }}">{{ size }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="input-group" style="width: 100%">
+                      <span
+                        class="input-group-addon cart-input-addon"
+                        id="color-label"
+                        >Color</span
+                      >
+                      <select
+                        class="form-control cart-input input-select"
+                        name="color"
+                        onchange="submitForm('{{item.id}}')"
+                      >
+                        {% for color in item.product.color|split:";" %}
+                        {% if color == item.color %}
+                        <option value="{{ color }}" selected>{{ color }}</option>
+                        {% else %}
+                        <option value="{{ color }}">{{ color }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {% comment %}
+                <div class="product-options">
+                  <label>
+                    Size
+                    <select class="input-select" name="size">
+                      {% for size in item.product.size|split:";" %} {% if size
+                      == item.size %}
+                      <option value="{{ size }}" selected>{{ size }}</option>
+                      {% else %}
+                      <option value="{{ size }}">{{ size }}</option>
+                      {% endif %} {% endfor %}
+                    </select>
+                  </label>
+                  <br />
+                  <label>
+                    Color
+                    <select class="input-select" name="color">
+                      {% for color in item.product.color|split:";" %} {% if
+                      color == item.color %}
+                      <option value="{{ color }}" selected>{{ color }}</option>
+                      {% else %}
+                      <option value="{{ color }}">{{ color }}</option>
+                      {% endif %} {% endfor %}
+                    </select>
+                  </label>
+                </div>
+
+                <label>
+                  Quantity
+                  <input
+                    class="qty"
+                    type="number"
+                    value="{{item.quantity}}"
+                    name="quantity"
+                  />
+                </label>
+                {% endcomment %}
+              </div>
+              <button
+                type="submit"
+                formaction="{% url "update-cart-item" item.id %}?action=delete"
+                class="delete"
+                onclick="if (!confirm('Are you sure you want to delete this item?')) event.preventDefault()"
+              >
+                <i class="fa fa-close"></i>
+              </button>
+            </form>
           </div>
+          <hr />
           {% endfor %}
         </div>
         <div class="order-summary">
@@ -38,10 +258,10 @@
           </div>
           <div class="order-col">
             <div><strong>TOTAL</strong></div>
-            <div><strong class="order-total">MVR 2940.00</strong></div>
+            <div><strong class="order-total">MVR 0.00</strong></div>
           </div>
         </div>
-        <a href="/checkout" class="primary-btn order-submit"
+        <a href="/checkout" class="primary-btn order-submit" id="checkout"
           >Continue to Checkout</a
         >
         {% endif %}

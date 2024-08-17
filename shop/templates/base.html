@@ -12,6 +12,13 @@
       {% block title %}CartIt - Clothing and Accessories{% endblock %}
     </title>
 
+    {% comment %} favicon {% endcomment %}
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'img/favicon.png' %}"
+    />
+
     <!-- Google font -->
     <link
       href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700"
@@ -85,13 +92,13 @@
               <a href="#">{{ user.username }}</a>
             </li>
             <li>
-              <a href="{% url 'logout' %}"
+              <a href="{% url 'logout' %}?next={{ request.path }}"
                 ><i class="fa fa-user-o"></i> Logout</a
               >
             </li>
             {% else %}
             <li>
-              <a href="{% url 'login' %}"><i class="fa fa-user-o"></i> Login</a>
+              <a href="{% url 'login' %}?next={{ request.path }}"><i class="fa fa-user-o"></i> Login</a>
             </li>
             {% endif %} {% comment %}
             <li>
@@ -133,7 +140,7 @@
                   <select class="input-select" name="c">
                     <option value="all">All Categories</option>
                     {% for category in categories %}
-                      {% if category == selected_category %}
+                      {% if category|in:selected_category %}
                         <option value="{{category}}" selected>{{category}}</option>
                       {% else %}
                         <option value="{{category}}">{{category}}</option>
@@ -150,6 +157,17 @@
             <!-- ACCOUNT -->
             <div class="col-md-3 clearfix">
               <div class="header-ctn">
+                {% if user.is_authenticated %}
+                <!-- Orders -->
+                <div>
+									<a href="{% url 'orders' %}">
+										<i class="fa fa-heart-o"></i>
+										<span>Your Orders</span>
+									</a>
+								</div>
+                <!-- /Orders -->
+                {% endif %}
+
                 <!-- Cart -->
                 <div>
                   <a href="{% url 'cart' %}">
@@ -190,10 +208,24 @@
         <div id="responsive-nav">
           <!-- NAV -->
           <ul class="main-nav nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/products">Products</a></li>
+            {% if active == "home" %}
+              <li class="active"><a href="/">Home</a></li>
+            {% else %}
+              <li><a href="/">Home</a></li>
+            {% endif %}
+
+            {% if active == "all" %}
+              <li class="active"><a href="/products">Products</a></li>
+            {% else %}
+              <li><a href="/products">Products</a></li>
+            {% endif %}
+
             {% for category in categories %}
-            <li><a href="#">{{ category.name }}</a></li>
+              {% if category|in:selected_category%}
+                <li class="active"><a href="#">{{ category.name }}</a></li>
+              {% else %}
+                <li><a href="/products?c={{ category }}">{{ category.name }}</a></li>
+              {% endif %}
             {% endfor %} {% comment %}
             <li><a href="#">Categories</a></li>
             <li><a href="#">Laptops</a></li>
