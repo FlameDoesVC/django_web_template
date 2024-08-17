@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static %}
+{% load static tz %}
 
 {% block content %}
 <!-- SECTION -->
@@ -8,7 +8,7 @@
 	<!-- container -->
 	<div class="container">
 		<!-- row -->
-		<div class="row" style="display: flex; justify-content: center">
+		<div class="row" style="display: flex; justify-content: center; margin-bottom: 3em" >
 			<div class="col-md-10 order-details">
         <div class="section-title text-center">
           <h3 class="title">Your Orders</h3>
@@ -22,16 +22,22 @@
           {% else %} {% for order in orders %}
           <div class="product-widget">
               <div class="product-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <h3 class="product-name">
-                      <a href="/order/{{order.slug}}">Order {{order.id}}</a>
-                    </h3>
-                    <h4 class="product-price">MVR {{order.total}}</h4>
-                  </div>
+                <div class="row" onclick="window.location = '/order/{{order.slug}}'">
+                    <div class="col-md-6">
+                      <h3>
+                        Order #{{order.id}}
+                      </h3>
+                      <h4 class="product-price">MVR {{order.total}}</h4>
+                    </div>
+                    <div class="col-md-6">
+                      <h4 class="product-price">Status: <span class="reset-product-price">{{order.status}}</span></h4>
+                      <h4 class="product-price">Date: <span class="reset-product-price">{{order.created_at|localtime}}</span></h4>
+                    </div>
                 </div>
           </div>
+          {% if not forloop.last %}
           <hr />
+          {% endif %}
           {% endfor %}
         </div>
         {% endif %}
@@ -42,4 +48,5 @@
 	<!-- /container -->
 </div>
 <!-- /SECTION -->
+
 {% endblock %}

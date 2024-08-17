@@ -252,9 +252,9 @@
                   <a href="#">{{product.title}}</a>
                 </h3>
                 <h4 class="product-price">
-                  MVR {{product.price}}
+                  MVR {{product.price|floatformat:2}}
                   <del class="product-old-price"
-                    >MVR {{product.price|add:100}}</del
+                    >MVR {{product.price|add:100|floatformat:2}}</del
                   >
                 </h4>
                 {% comment %}
@@ -288,7 +288,7 @@
                 </button>
                 {% endcomment %}
                 <button class="add-to-cart-btn">
-                  <i class="fa fa-shopping-cart"></i> add to cart
+                  <i class="fa fa-eye"></i> view
                 </button>
               </div>
             </div>

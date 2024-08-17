@@ -155,6 +155,7 @@ textarea.input {
 
 .input-number input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
   height: 40px;
   width: 100%;
   border: 1px solid #e4e7ed;
@@ -1570,6 +1571,12 @@ textarea.input {
   font-size: 70%;
   font-weight: 400;
   color: #8d99ae;
+}
+
+.reset-product-price {
+  /* font-size: 70%; */
+  font-weight: 500;
+  color: #2b2d42;
 }
 
 .product-details .product-available {

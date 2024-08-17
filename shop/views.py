@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login as lgin, logout as lgout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import SignupForm, LoginForm
-from .models import Cart, CartItem, Order, OrderItem, Product, ShippingAddress
+from .models import Cart, CartItem, Order, OrderItem, Product, ShippingAddress, Category
 
 
 @register.filter(name="split")
@@ -46,7 +46,13 @@ def paginate_products(request, products):
 
 # Create your views here.
 def index(request):
-	return render(request, "index.html", {"active": "home"})
+	products = Product.objects.all()
+	# print(products)
+	categories = Category.objects.all()
+	category_list = []
+	for category in categories:
+		category_list.append({"name": category.name, "products": products.filter(category=category)})
+	return render(request, "index.html", {"active": "home", "trending": products.order_by("-created_at")[:5], "new": products.order_by("-created_at")[:5], "categories": category_list})
 
 
 @login_required
@@ -178,7 +184,7 @@ def update_cart_item(request, item_id):
 		return redirect("cart")
 	if request.GET.get("action") == "decrement":
 		cart_item.quantity -= 1
-		if cart_item.quantity < 0:
+		if cart_item.quantity <= 0:
 			cart_item.delete()
 		else:
 			cart_item.save()
@@ -263,7 +269,7 @@ def signup(request):
 		form = SignupForm(request.POST)
 		if form.is_valid():
 			form.save()
-			return redirect("login")
+			return redirect(f"/login?{request.GET.urlencode()}")
 	else:
 		form = SignupForm()
 	return render(request, "signup.html", {"form": form, "query_str": request.GET.urlencode()})

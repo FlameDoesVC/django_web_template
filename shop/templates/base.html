@@ -141,9 +141,9 @@
                     <option value="all">All Categories</option>
                     {% for category in categories %}
                       {% if category|in:selected_category %}
-                        <option value="{{category}}" selected>{{category}}</option>
+                        <option value="{{category.name}}" selected>{{category.name}}</option>
                       {% else %}
-                        <option value="{{category}}">{{category}}</option>
+                        <option value="{{category.name}}">{{category.name}}</option>
                       {% endif %} 
                     {% endfor %}
                   </select>
@@ -224,7 +224,7 @@
               {% if category|in:selected_category%}
                 <li class="active"><a href="#">{{ category.name }}</a></li>
               {% else %}
-                <li><a href="/products?c={{ category }}">{{ category.name }}</a></li>
+                <li><a href="/products?c={{ category.name }}">{{ category.name }}</a></li>
               {% endif %}
             {% endfor %} {% comment %}
             <li><a href="#">Categories</a></li>
@@ -257,9 +257,9 @@
               <div class="footer">
                 <h3 class="footer-title">About Us</h3>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                  do eiusmod tempor incididunt ut.
+                  This is a simple e-commerce website built using Django.
                 </p>
+                <br>
                 <ul class="footer-links">
                   <li>
                     <a href="#"
@@ -280,18 +280,17 @@
               <div class="footer">
                 <h3 class="footer-title">Categories</h3>
                 <ul class="footer-links">
-                  <li><a href="#">Hot deals</a></li>
-                  <li><a href="#">Laptops</a></li>
-                  <li><a href="#">Smartphones</a></li>
-                  <li><a href="#">Cameras</a></li>
-                  <li><a href="#">Accessories</a></li>
+                  <li><a href="/products">All Products</a></li>
+                  {% for category in categories %}
+                    <li><a href="/products?c={{ category.name }}">{{ category.name }}</a></li>
+                  {% endfor %}
                 </ul>
               </div>
             </div>
 
             <div class="clearfix visible-xs"></div>
 
-            <div class="col-md-3 col-xs-6">
+            {% comment %} <div class="col-md-3 col-xs-6">
               <div class="footer">
                 <h3 class="footer-title">Information</h3>
                 <ul class="footer-links">
@@ -302,17 +301,14 @@
                   <li><a href="#">Terms & Conditions</a></li>
                 </ul>
               </div>
-            </div>
+            </div> {% endcomment %}
 
             <div class="col-md-3 col-xs-6">
               <div class="footer">
                 <h3 class="footer-title">Service</h3>
                 <ul class="footer-links">
-                  <li><a href="#">My Account</a></li>
-                  <li><a href="#">View Cart</a></li>
-                  <li><a href="#">Wishlist</a></li>
-                  <li><a href="#">Track My Order</a></li>
-                  <li><a href="#">Help</a></li>
+                  <li><a href="/cart">View Cart</a></li>
+                  <li><a href="/orders">Orders</a></li>
                 </ul>
               </div>
             </div>

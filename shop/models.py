@@ -19,8 +19,8 @@ class CartItem(models.Model):
         related_name="items",
     )
     product = models.ForeignKey("Product", on_delete=models.DO_NOTHING)
-    size = models.CharField(max_length=10)
-    color = models.CharField(max_length=10)
+    size = models.CharField(max_length=255)
+    color = models.CharField(max_length=255)
     quantity = models.IntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
 
@@ -51,6 +51,7 @@ class Order(models.Model):
     shipping_address = models.ForeignKey(ShippingAddress, on_delete=models.DO_NOTHING)
     notes = models.TextField()
     payment_method = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, default="Pending")
 
     def __str__(self):
         return f"Order {self.id}"
@@ -67,8 +68,8 @@ class OrderItem(models.Model):
         related_name="items",
     )
     product = models.ForeignKey("Product", on_delete=models.DO_NOTHING)
-    size = models.CharField(max_length=10)
-    color = models.CharField(max_length=10)
+    size = models.CharField(max_length=255)
+    color = models.CharField(max_length=255)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
@@ -90,6 +91,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="shop/products/")
     size = models.CharField(max_length=255)
     color = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
